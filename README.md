@@ -2,8 +2,8 @@
 
 - [Day 1: Trebuchet?! :rocket:](#day-1-trebuchet-rocket)
 - [Day 2: Cube Conundrum :ice_cube:](#day-2-cube-conundrum-ice_cube)
-- [Day 3: Gear Ratios
-  :aerial_tramway:](#day-3-gear-ratios-aerial_tramway)
+- [Day 3: Gear Ratios :gear:](#day-3-gear-ratios-gear)
+- [Day 3: Scratchcards :tickets:](#day-3-scratchcards-tickets)
 
 Hi! :wave:
 
@@ -111,7 +111,7 @@ print(res)
 
     49710
 
-## Day 3: Gear Ratios :aerial_tramway:
+## Day 3: Gear Ratios :gear:
 
 ### Part one (Python)
 
@@ -173,3 +173,38 @@ print(res)
 ```
 
     91622824
+
+## Day 3: Scratchcards :tickets:
+
+### Part one (Python)
+
+``` python
+res = 0
+ns_wins = []  # Relevant for part two
+with open("data/day_04.txt") as file:
+    for row in file:
+        winning_nums = row.split(":")[1].split("|")[0].split()
+        my_nums = row.split(":")[1].split("|")[1].split()
+        n_wins = len(set(winning_nums) & set(my_nums))
+        ns_wins.append(n_wins)
+        if n_wins > 0:
+            res += 2 ** (n_wins - 1)
+
+print(res)
+```
+
+    19135
+
+### Part two (Python)
+
+``` python
+ns_cards = [1] * len(ns_wins)
+for ix, (n_cards, n_wins) in enumerate(zip(ns_cards, ns_wins)):
+    next_ixs = slice(ix + 1, ix + n_wins + 1)
+    for _ in range(n_cards):
+        ns_cards[next_ixs] = [n + 1 for n in ns_cards[next_ixs]]
+
+print(sum(ns_cards))
+```
+
+    5704953

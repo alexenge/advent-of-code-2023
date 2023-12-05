@@ -97,7 +97,7 @@ with open("data/day_02.txt") as file:
 print(res)
 ```
 
-## Day 3: Gear Ratios :aerial_tramway:
+## Day 3: Gear Ratios :gear:
 
 ### Part one (Python)
 
@@ -154,4 +154,35 @@ for ixs in asterisk_ixs:
         res += prod(neighbor_nums)
 
 print(res)
+```
+
+## Day 3: Scratchcards :tickets:
+
+### Part one (Python)
+
+```{python}
+res = 0
+ns_wins = []  # Relevant for part two
+with open("data/day_04.txt") as file:
+    for row in file:
+        winning_nums = row.split(":")[1].split("|")[0].split()
+        my_nums = row.split(":")[1].split("|")[1].split()
+        n_wins = len(set(winning_nums) & set(my_nums))
+        ns_wins.append(n_wins)
+        if n_wins > 0:
+            res += 2 ** (n_wins - 1)
+
+print(res)
+```
+
+### Part two (Python)
+
+```{python}
+ns_cards = [1] * len(ns_wins)
+for ix, (n_cards, n_wins) in enumerate(zip(ns_cards, ns_wins)):
+    next_ixs = slice(ix + 1, ix + n_wins + 1)
+    for _ in range(n_cards):
+        ns_cards[next_ixs] = [n + 1 for n in ns_cards[next_ixs]]
+
+print(sum(ns_cards))
 ```
