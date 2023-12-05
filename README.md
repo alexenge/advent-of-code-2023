@@ -1,7 +1,9 @@
 # Advent of Code 2023
 
-- [Day 1: Trebuchet?! 🚀](#day-1-trebuchet)
-- [Day 2: Cube Conundrum 🧊](#day-2-cube-conundrum)
+- [Day 1: Trebuchet?! :rocket:](#day-1-trebuchet-rocket)
+- [Day 2: Cube Conundrum :ice_cube:](#day-2-cube-conundrum-ice_cube)
+- [Day 3: Gear Ratios
+  :aerial_tramway:](#day-3-gear-ratios-aerial_tramway)
 
 Hi! :wave:
 
@@ -22,7 +24,7 @@ I’ll be using a mix of [Python](https://www.python.org), [Base
 R](https://www.r-project.org), and [tidyverse-style
 R](https://www.tidyverse.org).
 
-## Day 1: Trebuchet?! 🚀
+## Day 1: Trebuchet?! :rocket:
 
 ### Part one (Python)
 
@@ -66,7 +68,7 @@ print(res)
 
     56017
 
-## Day 2: Cube Conundrum 🧊
+## Day 2: Cube Conundrum :ice_cube:
 
 ### Part one (Python)
 
@@ -108,3 +110,66 @@ print(res)
 ```
 
     49710
+
+## Day 3: Gear Ratios :aerial_tramway:
+
+### Part one (Python)
+
+``` python
+import re
+
+nums = []
+nums_ixs = []
+symbs = []
+symb_ixs = []
+with open("data/day_03.txt") as file:
+    for row_ix, line in enumerate(file):
+        for match in re.finditer(r"(\d+)", line):
+            num = int(match.group())
+            nums.append(num)
+            col_ixs = range(*match.span())
+            nums_ixs.append([(row_ix, col_ix) for col_ix in col_ixs])
+
+        for match in re.finditer(r"[^\w\s\d\.]", line):
+            symbs.append(match.group())
+            col_ix = match.start()
+            symb_ixs.append((row_ix, col_ix))
+
+res = 0
+for num, num_ixs in zip(nums, nums_ixs):
+    add = 0
+    for ixs in num_ixs:
+        for row_neighbor in [-1, 0, 1]:
+            for col_neighbor in [-1, 0, 1]:
+                neighbor_ixs = (ixs[0] + row_neighbor, ixs[1] + col_neighbor)
+                if neighbor_ixs in symb_ixs:
+                    add = num
+    res += add
+
+print(res)
+```
+
+    560670
+
+### Part two (Python)
+
+``` python
+from math import prod
+
+asterisk_ixs = [ixs for symb, ixs in zip(symbs, symb_ixs) if symb == "*"]
+res = 0
+for ixs in asterisk_ixs:
+    neighbor_nums = set()
+    for row_neighbor in [-1, 0, 1]:
+        for col_neighbor in [-1, 0, 1]:
+            neighbor_ixs = (ixs[0] + row_neighbor, ixs[1] + col_neighbor)
+            for num, num_ixs in zip(nums, nums_ixs):
+                if neighbor_ixs in num_ixs:
+                    neighbor_nums.add(num)
+    if len(neighbor_nums) == 2:
+        res += prod(neighbor_nums)
+
+print(res)
+```
+
+    91622824
