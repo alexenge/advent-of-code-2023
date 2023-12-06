@@ -3,7 +3,9 @@
 - [Day 1: Trebuchet?! :rocket:](#day-1-trebuchet-rocket)
 - [Day 2: Cube Conundrum :ice_cube:](#day-2-cube-conundrum-ice_cube)
 - [Day 3: Gear Ratios :gear:](#day-3-gear-ratios-gear)
-- [Day 3: Scratchcards :tickets:](#day-3-scratchcards-tickets)
+- [Day 4: Scratchcards :tickets:](#day-4-scratchcards-tickets)
+- [Day 5: Day 5: If You Give A Seed A Fertilizer
+  :seedling:](#day-5-day-5-if-you-give-a-seed-a-fertilizer-seedling)
 
 Hi! :wave:
 
@@ -21,7 +23,7 @@ From the Advent of Code website:
 > problems, a speed contest, or to challenge each other.
 
 I’ll be using a mix of [Python](https://www.python.org), [Base
-R](https://www.r-project.org), and [tidyverse-style
+R](https://www.r-project.org), and [Tidyverse-style
 R](https://www.tidyverse.org).
 
 ## Day 1: Trebuchet?! :rocket:
@@ -174,7 +176,7 @@ print(res)
 
     91622824
 
-## Day 3: Scratchcards :tickets:
+## Day 4: Scratchcards :tickets:
 
 ### Part one (Python)
 
@@ -182,9 +184,9 @@ print(res)
 res = 0
 ns_wins = []  # Relevant for part two
 with open("data/day_04.txt") as file:
-    for row in file:
-        winning_nums = row.split(":")[1].split("|")[0].split()
-        my_nums = row.split(":")[1].split("|")[1].split()
+    for line in file:
+        winning_nums = line.split(":")[1].split("|")[0].split()
+        my_nums = line.split(":")[1].split("|")[1].split()
         n_wins = len(set(winning_nums) & set(my_nums))
         ns_wins.append(n_wins)
         if n_wins > 0:
@@ -208,3 +210,66 @@ print(sum(ns_cards))
 ```
 
     5704953
+
+## Day 5: Day 5: If You Give A Seed A Fertilizer :seedling:
+
+### Part one (Python)
+
+``` python
+import re
+
+
+def update_list_from_dict(l, d):
+    return [d[x] if x in d else x for x in l]
+
+
+dsts, srcs, rans = [], [], []
+with open("data/day_05.txt") as file:
+    for line in file:
+        nums = [int(num) for num in re.findall(r"(\d+)", line)]
+        if "seeds" in line:
+            seeds = nums
+        elif nums:
+            dst, src, ran = nums
+            dsts.append(dst)
+            srcs.append(src)
+            rans.append(ran)
+        elif line == "\n":
+            for ix, seed in enumerate(seeds):
+                for dst, src, ran in zip(dsts, srcs, rans):
+                    if seed >= src and seed < src + ran:
+                        seeds[ix] = seed + dst - src
+            dsts, srcs, rans = [], [], []
+
+print(min(seeds))
+```
+
+    265018614
+
+### Part two (Python)
+
+``` python
+# # Doesn't run as there are too many seeds :(
+# dsts, srcs, rans = [], [], []
+# with open("data/day_05.txt") as file:
+#     for line in file:
+#         nums = [int(num) for num in re.findall(r"(\d+)", line)]
+#         if "seeds" in line:  # Only this part has changed
+#             seeds = []
+#             for ix in range(0, len(nums), 2):
+#                 seeds += list(range(nums[ix], nums[ix] + nums[ix + 1]))
+#             print(seeds)
+#         elif nums:
+#             dst, src, ran = nums
+#             dsts.append(dst)
+#             srcs.append(src)
+#             rans.append(ran)
+#         elif line == "\n":
+#             for ix, seed in enumerate(seeds):
+#                 for dst, src, ran in zip(dsts, srcs, rans):
+#                     if seed >= src and seed < src + ran:
+#                         seeds[ix] = seed + dst - src
+#             dsts, srcs, rans = [], [], []
+#
+# print(min(seeds))
+```
